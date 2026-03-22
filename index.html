@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SENN STORE - ORDER DIRECT</title>
+    <title>SENN PREMIUM STORE</title>
     <style>
         :root {
             --primary: #10b981;
@@ -17,14 +17,19 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--light-bg); color: var(--text-main); }
         .app { max-width: 450px; margin: 0 auto; min-height: 100vh; background: var(--light-bg); position: relative; }
-        
-        /* Header */
+
+        /* --- LOGIN SCREEN --- */
+        #login-screen { position: fixed; inset: 0; background: var(--white); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
+        .login-box { width: 100%; text-align: center; }
+        .login-input { width: 100%; padding: 15px; border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; outline: none; }
+        .login-btn { width: 100%; padding: 16px; background: var(--dark); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+
+        /* --- UI ELEMENTS --- */
         .header { background: var(--white); padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .status-badge { font-size: 0.7rem; font-weight: 800; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; }
         .status-open { background: #dcfce7; color: #166534; }
         .status-closed { background: #fee2e2; color: #991b1b; }
 
-        /* Grid */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
         .card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; padding-bottom: 10px; }
         .img-box { height: 110px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
@@ -33,14 +38,14 @@
         .price { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
         .add-btn { width: 35px; height: 35px; background: var(--dark); color: white; border: none; border-radius: 10px; position: absolute; bottom: 10px; right: 10px; font-weight: bold; cursor: pointer; }
 
-        /* Modal */
+        /* --- MODAL --- */
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 1000; align-items: flex-end; }
         .modal { background: white; width: 100%; max-width: 450px; padding: 25px; border-radius: 25px 25px 0 0; }
         .qty-ctrl { display: flex; align-items: center; gap: 20px; margin: 20px 0; justify-content: center; }
         .q-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--border); background: white; font-size: 1.2rem; cursor: pointer; }
         .note { width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; outline: none; background: #f9fafb; font-size: 0.85rem; }
 
-        /* Footer Cart */
+        /* --- FOOTER --- */
         .footer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: var(--white); border-top: 1px solid var(--border); z-index: 200; display: none; padding: 15px 20px 30px; border-radius: 20px 20px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.05); }
         .checkout-btn { background: var(--primary); color: white; padding: 15px 30px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .checkout-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
@@ -49,6 +54,16 @@
 <body>
 
 <div class="app">
+    <div id="login-screen" style="display: none;">
+        <div class="login-box">
+            <h1 style="margin-bottom: 20px;">SENN STORE</h1>
+            <p style="margin-bottom: 20px; color: var(--text-muted);">Isi data buat mulai belanja ya!</p>
+            <input type="text" id="cust-name" class="login-input" placeholder="Nama Lengkap">
+            <input type="number" id="cust-phone" class="login-input" placeholder="Nomor WA (Contoh: 0812...)">
+            <button class="login-btn" onclick="saveLogin()">Masuk Sekarang</button>
+        </div>
+    </div>
+
     <div class="header">
         <h1>SENN STORE</h1>
         <div id="status"></div>
@@ -74,14 +89,12 @@
             <div id="t-price" style="font-weight:800; font-size:1.2rem;">Rp 0</div>
             <div id="t-count" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">0 Item</div>
         </div>
-        <button class="checkout-btn" id="send-wa" onclick="sendToWA()">
-            <span>Kirim Pesanan ke WhatsApp</span>
-        </button>
+        <button class="checkout-btn" id="send-wa" onclick="sendToWA()">Kirim Pesanan ke WhatsApp</button>
     </div>
 </div>
 
 <script>
-    const WA_NUMBER = "628xxxxxxxxxx"; // <--- GANTI NOMOR WA LO DI SINI SENN!
+    const WA_NUMBER = "6282325565971"; // <--- GANTI NOMOR WA LO DI SINI SENN!
     const items = [
         { id: 1, name: "Cireng Renyah", price: 1000, icon: "🍘" },
         { id: 2, name: "Takoyaki Spesial", price: 2000, icon: "🐙" },
@@ -94,7 +107,29 @@
     let cur = null;
     let qty = 1;
 
+    // --- LOGIN LOGIC ---
+    function checkLogin() {
+        const user = localStorage.getItem('senn_user');
+        if (!user) {
+            document.getElementById('login-screen').style.display = 'flex';
+        } else {
+            document.getElementById('login-screen').style.display = 'none';
+        }
+    }
+
+    function saveLogin() {
+        const name = document.getElementById('cust-name').value;
+        const phone = document.getElementById('cust-phone').value;
+        if (name && phone) {
+            localStorage.setItem('senn_user', JSON.stringify({ name, phone }));
+            checkLogin();
+        } else {
+            alert("Isi nama & nomor WA dulu bro!");
+        }
+    }
+
     function init() {
+        checkLogin();
         const hours = new Date().getHours();
         const isOpen = (hours >= 9 && hours < 21);
         document.getElementById('status').innerHTML = isOpen ? 
@@ -113,6 +148,7 @@
             </div>`).join('');
     }
 
+    // --- MODAL & CART LOGIC ---
     function show(id) {
         cur = items.find(i => i.id === id);
         qty = 1;
@@ -143,22 +179,21 @@
 
     function sendToWA() {
         if(cart.length === 0) return;
+        const user = JSON.parse(localStorage.getItem('senn_user'));
         
-        let list = cart.map(i => `• *${i.name}* (${i.qty}x)${i.note ? '%0A  _Catatan: ' + i.note + '_' : ''}`).join('%0A%0A');
+        let list = cart.map(i => `• *${i.name}* (${i.qty}x)${i.note ? '%0A  _Ket: ' + i.note + '_' : ''}`).join('%0A%0A');
         let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
         
-        let text = `*HALO SENN STORE!*%0A` +
-                   `Saya mau pesan nih:%0A%0A` +
-                   `${list}%0A%0A` +
-                   `*TOTAL PEMBAYARAN: Rp ${total.toLocaleString()}*%0A%0A` +
-                   `_Mohon segera diproses ya!_`;
+        let text = `*ORDER SENN STORE*%0A%0A` +
+                   `*Pesenan Atas Nama:*%0A${user.name} (${user.phone})%0A%0A` +
+                   `*Item:*%0A${list}%0A%0A` +
+                   `*Total: Rp ${total.toLocaleString()}*`;
 
-        // INI FITUR OTOMATIS KE WA PENJUAL
-        window.open(`https://wa.me/${082325565971}?text=${text}`, '_blank');
+        window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, '_blank');
     }
 
     init();
-    setInterval(init, 5000); // Cek status buka/tutup tiap 5 detik
+    setInterval(init, 5000); 
 </script>
 
 </body>
