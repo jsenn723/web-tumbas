@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SENN STORE - Secure V11</title>
+    <title>SENN STORE V12</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --p: #007aff; --bg: #fbfbfd; --card: #ffffff; --text: #1d1d1f; --sec: #86868b; }
@@ -13,19 +13,20 @@
         /* AUTH SCREEN */
         #auth-screen { position: fixed; inset: 0; z-index: 5000; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 25px; }
         .auth-card { background: var(--card); padding: 40px 30px; border-radius: 35px; width: 100%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); text-align: center; border: 1px solid #f0f0f0; }
-        .input-box { width: 100%; padding: 18px; margin-top: 15px; border-radius: 18px; border: 1.5px solid #eee; outline: none; background: #fdfdfd; font-size: 0.95rem; transition: 0.3s; }
-        .input-box:focus { border-color: var(--p); }
+        .input-box { width: 100%; padding: 18px; margin-top: 15px; border-radius: 18px; border: 1.5px solid #eee; outline: none; background: #fdfdfd; font-size: 0.95rem; }
         .btn-auth { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 18px; margin-top: 25px; font-weight: 800; cursor: pointer; }
 
         /* UI ELEMENTS */
         header { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); padding: 15px 25px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.03); }
         header h1 { font-size: 1.2rem; font-weight: 800; color: var(--p); }
-        .logout-btn { background: #fff1f0; color: #ff3b30; border: none; padding: 8px 15px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
+        .logout-btn { background: #fff1f0; color: #ff3b30; border: none; padding: 8px 15px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; }
 
         .banner { margin: 20px; padding: 25px; background: linear-gradient(135deg, #007aff, #00c6ff); border-radius: 30px; color: white; box-shadow: 0 15px 30px rgba(0,122,255,0.15); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .card { background: var(--card); border-radius: 28px; padding: 18px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.02); border: 1px solid #f9f9f9; }
+        .card { background: var(--card); border-radius: 28px; padding: 18px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.02); border: 1px solid #f9f9f9; position: relative; }
         .img-box { height: 90px; font-size: 3rem; display: flex; align-items: center; justify-content: center; background: #f8f8fa; border-radius: 20px; margin-bottom: 10px; }
+        
+        .status-tag { position: absolute; inset: 0; background: rgba(255,255,255,0.8); border-radius: 28px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; z-index: 5; }
 
         /* FOOTER & MODAL */
         .footer { position: fixed; bottom: 30px; left: 20px; right: 20px; background: #1d1d1f; color: white; padding: 18px 25px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; transform: translateY(150px); transition: 0.6s; z-index: 200; }
@@ -39,7 +40,7 @@
         <div class="auth-card">
             <div id="login-section">
                 <h1 style="font-weight: 800;">SENN STORE.</h1>
-                <p style="color: var(--sec); font-size: 0.85rem; margin-bottom: 25px;">Masukkan data untuk jajan</p>
+                <p style="color: var(--sec); font-size: 0.85rem; margin-bottom: 25px;">Jajan Estetik & Terjamin</p>
                 <input type="text" id="reg-name" class="input-box" placeholder="Nama Lengkap">
                 <input type="number" id="reg-phone" class="input-box" placeholder="WhatsApp (08...)">
                 <button class="btn-auth" onclick="requestOTP()">Minta Kode OTP (WA)</button>
@@ -54,13 +55,13 @@
     </div>
 
     <header>
-        <h1 onclick="location.reload()">SENN STORE.</h1>
+        <h1>SENN STORE.</h1>
         <button class="logout-btn" onclick="logout()">LOGOUT</button>
     </header>
 
     <div class="banner">
-        <h2 style="font-weight: 800; font-size: 1.3rem;">MENU TERSEDIA.</h2>
-        <p style="font-size: 0.7rem; opacity: 0.9; margin-top: 5px;">Pesan jajan jadi lebih aman dan estetik!</p>
+        <h2 id="greet-title" style="font-weight: 800; font-size: 1.3rem;">HALO TEMAN!</h2>
+        <p id="time-status" style="font-size: 0.7rem; opacity: 0.9; margin-top: 5px;">Memuat status toko...</p>
     </div>
 
     <div class="grid" id="product-grid"></div>
@@ -74,7 +75,7 @@
                 <span id="m-qty" style="font-size: 1.8rem; font-weight: 800;">1</span>
                 <button onclick="setQty(1)" style="width: 50px; height: 50px; border-radius: 15px; background: var(--p); color: white; border: none; font-size: 1.5rem;">+</button>
             </div>
-            <button class="btn-auth" onclick="addToCart()">Tambah ke Keranjang</button>
+            <button class="btn-auth" onclick="addToCart()">Masukkan Keranjang</button>
             <button onclick="closeModal()" style="border:none; background:none; color:var(--sec); font-weight:700; margin-top:20px; width:100%;">BATAL</button>
         </div>
     </div>
@@ -84,35 +85,39 @@
             <p id="total-val" style="font-weight: 800; font-size: 1.1rem;">Rp 0</p>
             <p id="u-display" style="font-size: 0.6rem; opacity: 0.6; font-weight: 800;">USER</p>
         </div>
-        <button onclick="checkout()" style="background:var(--p); color:white; border:none; padding:12px 25px; border-radius:18px; font-weight:800; font-size:0.8rem;">KIRIM WA</button>
+        <button onclick="checkout()" style="background:var(--p); color:white; border:none; padding:12px 25px; border-radius:18px; font-weight:800; font-size:0.8rem;">ORDER WA</button>
     </div>
 
 <script>
+    // ==========================================
+    // ⚙️ PENGATURAN OWNER (EDIT DI SINI) ⚙️
+    // ==========================================
     const WA_OWNER = "6282325565971"; 
     
-    // Sistem OTP Unik & 1x Pakai
-    let activeOTP = null; 
+    // ATUR JAM BUKA & TUTUP (Format 24 Jam)
+    const JAM_BUKA = 8;  // Jam 08:00 Pagi
+    const JAM_TUTUP = 21; // Jam 21:00 Malam
 
-    const menu = [
-        { id: 1, name: "Cireng Renyah", price: 1000, img: "🍘" },
-        { id: 2, name: "Takoyaki Spesial", price: 2000, img: "🐙" },
-        { id: 3, name: "Es Teh Manis", price: 3000, img: "🍹" },
-        { id: 4, name: "Es Lumut Viral", price: 4000, img: "🌿" },
-        { id: 5, name: "Es Kuwut Bali", price: 3000, img: "🥥" }
+    // ATUR STOK (true = ADA, false = HABIS)
+    const MENU_DATA = [
+        { id: 1, name: "Cireng Renyah", price: 1000, img: "🍘", ada: true },
+        { id: 2, name: "Takoyaki Spesial", price: 2000, img: "🐙", ada: true },
+        { id: 3, name: "Es Teh Manis", price: 3000, img: "🍹", ada: true },
+        { id: 4, name: "Es Lumut Viral", price: 4000, img: "🌿", ada: true },
+        { id: 5, name: "Es Kuwut Bali", price: 3000, img: "🥥", ada: true }
     ];
+    // ==========================================
 
+    let activeOTP = null; 
     let cart = [], curP = null, qty = 1;
 
-    // --- AUTH LOGIC ---
     function requestOTP() {
         const n = document.getElementById('reg-name').value;
         const p = document.getElementById('reg-phone').value;
-        if(n.length < 2 || p.length < 10) return alert("Isi data dulu!");
+        if(n.length < 2 || p.length < 10) return alert("Lengkapi data!");
 
-        // Bikin OTP beda setiap kali klik
         activeOTP = Math.floor(1000 + Math.random() * 9000).toString();
-        
-        const msg = `Halo Senn! Saya *${n}* mau masuk toko. Minta kode OTP nya dong.%0A%0A(Admin: Kode unik buat dia adalah *${activeOTP}*)`;
+        const msg = `Halo Senn! Saya *${n}* mau masuk toko. Minta kode OTP nya dong.%0A%0A(Admin: Kode unik adalah *${activeOTP}*)`;
         window.open(`https://wa.me/${WA_OWNER}?text=${msg}`, '_blank');
         
         document.getElementById('login-section').style.display = 'none';
@@ -120,50 +125,51 @@
     }
 
     function verifyOTP() {
-        const input = document.getElementById('otp-input').value;
-        if(input === activeOTP) {
-            // Berhasil masuk, langsung "hanguskan" kode biar ga bisa dipake lagi
-            activeOTP = "EXPIRED_" + Math.random(); 
-            
+        if(document.getElementById('otp-input').value === activeOTP) {
+            activeOTP = "USED_" + Math.random(); // Hanguskan OTP
             localStorage.setItem('senn_session', JSON.stringify({
                 n: document.getElementById('reg-name').value,
                 p: document.getElementById('reg-phone').value
             }));
             initApp();
-        } else {
-            alert("Kode Salah atau sudah Kadaluarsa! Silahkan minta kode baru.");
-        }
+        } else { alert("Kode Salah/Kadaluarsa!"); }
     }
 
     function initApp() {
         const user = localStorage.getItem('senn_session');
         if(user) {
             document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('u-display').innerText = JSON.parse(user).n.toUpperCase();
+            const userData = JSON.parse(user);
+            document.getElementById('u-display').innerText = userData.n.toUpperCase();
+            document.getElementById('greet-title').innerText = "HALO, " + userData.n.toUpperCase() + "!";
             renderGrid();
         }
     }
 
-    function logout() {
-        if(confirm("Yakin mau keluar akun?")) {
-            localStorage.removeItem('senn_session');
-            location.reload();
-        }
-    }
-
-    // --- STORE LOGIC ---
     function renderGrid() {
-        document.getElementById('product-grid').innerHTML = menu.map(p => `
-            <div class="card" onclick="openModal(${p.id})">
-                <div class="img-box">${p.img}</div>
-                <h3 style="font-size:0.8rem; font-weight:700;">${p.name}</h3>
-                <p style="color:var(--p); font-weight:800; font-size:0.85rem;">Rp ${p.price.toLocaleString()}</p>
-            </div>
-        `).join('');
+        const jamSekarang = new Date().getHours();
+        const isBuka = jamSekarang >= JAM_BUKA && jamSekarang < JAM_TUTUP;
+        
+        document.getElementById('time-status').innerText = isBuka ? 
+            `Toko Buka (Tutup Jam ${JAM_TUTUP}:00)` : 
+            `Toko Sedang Tutup (Buka Jam ${JAM_BUKA}:00)`;
+
+        document.getElementById('product-grid').innerHTML = MENU_DATA.map(p => {
+            const bolehBeli = isBuka && p.ada;
+            return `
+                <div class="card" onclick="${bolehBeli ? `openModal(${p.id})` : ''}">
+                    ${!p.ada ? '<div class="status-tag" style="color:#ff3b30">STOK HABIS</div>' : ''}
+                    ${!isBuka && p.ada ? '<div class="status-tag" style="color:#86868b">TOKO TUTUP</div>' : ''}
+                    <div class="img-box">${p.img}</div>
+                    <h3 style="font-size:0.8rem; font-weight:700;">${p.name}</h3>
+                    <p style="color:var(--p); font-weight:800; font-size:0.85rem;">Rp ${p.price.toLocaleString()}</p>
+                </div>
+            `;
+        }).join('');
     }
 
     function openModal(id) {
-        curP = menu.find(p => p.id === id); qty = 1;
+        curP = MENU_DATA.find(p => p.id === id); qty = 1;
         document.getElementById('m-name').innerText = curP.name;
         document.getElementById('m-img').innerText = curP.img;
         document.getElementById('m-qty').innerText = "1";
@@ -184,8 +190,15 @@
         const u = JSON.parse(localStorage.getItem('senn_session'));
         let list = cart.map(i => `• *${i.name}* (${i.q}x)`).join('%0A');
         let total = cart.reduce((s, i) => s + (i.price * i.q), 0);
-        let msg = `*PESANAN SENN STORE*%0A%0A*Nama:* ${u.n}%0A*Menu:*%0A${list}%0A%0A*Total: Rp ${total.toLocaleString()}*`;
+        let msg = `*ORDER SENN STORE*%0A%0A*Nama:* ${u.n}%0A*Menu:*%0A${list}%0A%0A*Total: Rp ${total.toLocaleString()}*`;
         window.open(`https://wa.me/${WA_OWNER}?text=${msg}`, '_blank');
+    }
+
+    function logout() {
+        if(confirm("Keluar dari akun?")) {
+            localStorage.removeItem('senn_session');
+            location.reload();
+        }
     }
 
     window.onload = initApp;
