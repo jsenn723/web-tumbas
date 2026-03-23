@@ -3,198 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SENN PREMIUM STORE</title>
+    <title>SENN STORE - Aesthetic Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981;
-            --dark: #0f172a;
-            --light-bg: #f8fafc;
-            --white: #ffffff;
-            --border: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --p: #007aff;
+            --p-light: #e5f1ff;
+            --bg: #fbfbfd;
+            --card: #ffffff;
+            --text: #1d1d1f;
+            --sec: #86868b;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--light-bg); color: var(--text-main); }
-        .app { max-width: 450px; margin: 0 auto; min-height: 100vh; background: var(--light-bg); position: relative; }
 
-        /* --- LOGIN SCREEN --- */
-        #login-screen { position: fixed; inset: 0; background: var(--white); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; }
-        .login-box { width: 100%; text-align: center; }
-        .login-input { width: 100%; padding: 15px; border: 1.5px solid var(--border); border-radius: 12px; margin-bottom: 10px; outline: none; }
-        .login-btn { width: 100%; padding: 16px; background: var(--dark); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 120px; }
 
-        /* --- UI ELEMENTS --- */
-        .header { background: var(--white); padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .status-badge { font-size: 0.7rem; font-weight: 800; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; }
-        .status-open { background: #dcfce7; color: #166534; }
-        .status-closed { background: #fee2e2; color: #991b1b; }
+        /* --- AUTH SCREEN --- */
+        #auth-screen { position: fixed; inset: 0; z-index: 5000; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 25px; transition: 0.5s ease-in-out; }
+        .auth-card { background: var(--card); padding: 40px 30px; border-radius: 35px; width: 100%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; text-align: center; }
+        .auth-card h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; background: linear-gradient(135deg, #007aff, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .input-box { width: 100%; padding: 18px; margin-top: 15px; border-radius: 18px; border: 1.5px solid #eee; outline: none; transition: 0.3s; background: #fdfdfd; font-size: 0.95rem; }
+        .input-box:focus { border-color: var(--p); box-shadow: 0 0 0 4px var(--p-light); }
+        .btn-auth { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 18px; margin-top: 25px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 20px rgba(0,122,255,0.2); }
+        .btn-auth:active { transform: scale(0.96); opacity: 0.9; }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
-        .card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; position: relative; padding-bottom: 10px; }
-        .img-box { height: 110px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
-        .info { padding: 12px; }
-        .name { font-size: 0.85rem; font-weight: 700; }
-        .price { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
-        .add-btn { width: 35px; height: 35px; background: var(--dark); color: white; border: none; border-radius: 10px; position: absolute; bottom: 10px; right: 10px; font-weight: bold; cursor: pointer; }
+        /* --- UI COMPONENTS --- */
+        header { background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 20px 25px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        header h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -1px; color: var(--text); }
+        .logout-btn { font-size: 0.7rem; font-weight: 700; color: #ff3b30; cursor: pointer; padding: 6px 12px; background: #fff1f0; border-radius: 10px; }
 
-        /* --- MODAL --- */
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; z-index: 1000; align-items: flex-end; }
-        .modal { background: white; width: 100%; max-width: 450px; padding: 25px; border-radius: 25px 25px 0 0; }
-        .qty-ctrl { display: flex; align-items: center; gap: 20px; margin: 20px 0; justify-content: center; }
-        .q-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--border); background: white; font-size: 1.2rem; cursor: pointer; }
-        .note { width: 100%; padding: 15px; border: 1px solid var(--border); border-radius: 12px; margin-top: 10px; outline: none; background: #f9fafb; font-size: 0.85rem; }
+        .banner { margin: 20px; padding: 25px; background: linear-gradient(135deg, #007aff, #00c6ff); border-radius: 30px; color: white; position: relative; overflow: hidden; box-shadow: 0 15px 30px rgba(0,122,255,0.2); }
+        .banner h2 { font-weight: 800; font-size: 1.4rem; position: relative; z-index: 2; }
+        .banner p { font-size: 0.8rem; opacity: 0.9; margin-top: 5px; font-weight: 500; }
+        .banner::after { content: '🛍️'; position: absolute; right: -10px; bottom: -10px; font-size: 5rem; opacity: 0.2; transform: rotate(-15deg); }
 
-        /* --- FOOTER --- */
-        .footer { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 450px; background: var(--white); border-top: 1px solid var(--border); z-index: 200; display: none; padding: 15px 20px 30px; border-radius: 20px 20px 0 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.05); }
-        .checkout-btn { background: var(--primary); color: white; padding: 15px 30px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .checkout-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 0 20px; }
+        .card { background: var(--card); border-radius: 30px; padding: 20px; text-align: center; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 10px 25px rgba(0,0,0,0.02); transition: 0.3s; position: relative; }
+        .card:active { transform: scale(0.93); background: #fcfcfc; }
+        .img-box { height: 100px; font-size: 3.5rem; display: flex; align-items: center; justify-content: center; background: #f8f8fa; border-radius: 25px; margin-bottom: 12px; }
+        .card h3 { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+        .card p { color: var(--p); font-weight: 800; font-size: 0.9rem; margin-top: 4px; }
+
+        /* --- FOOTER & MODAL --- */
+        .footer { position: fixed; bottom: 30px; left: 20px; right: 20px; background: #1d1d1f; color: white; padding: 18px 25px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; transform: translateY(150px); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); z-index: 200; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: flex-end; }
+        .modal { background: white; width: 100%; border-radius: 35px 35px 0 0; padding: 40px 30px; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        #otp-section { display: none; }
     </style>
 </head>
 <body>
 
-<div class="app">
-    <div id="login-screen" style="display: none;">
-        <div class="login-box">
-            <h1 style="margin-bottom: 20px;">SENN STORE</h1>
-            <p style="margin-bottom: 20px; color: var(--text-muted);">Isi data buat mulai belanja ya!</p>
-            <input type="text" id="cust-name" class="login-input" placeholder="Nama Lengkap">
-            <input type="number" id="cust-phone" class="login-input" placeholder="Nomor WA (Contoh: 0812...)">
-            <button class="login-btn" onclick="saveLogin()">Masuk Sekarang</button>
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div id="login-section">
+                <h1>SENN STORE.</h1>
+                <p style="color: var(--sec); font-size: 0.85rem; margin-bottom: 25px;">Verified Shopping Experience</p>
+                <input type="text" id="reg-name" class="input-box" placeholder="Nama Lengkap">
+                <input type="number" id="reg-phone" class="input-box" placeholder="No WhatsApp (Aktif)">
+                <button class="btn-auth" onclick="requestOTP()">Dapatkan Kode OTP</button>
+            </div>
+
+            <div id="otp-section">
+                <h1>Security Code</h1>
+                <p id="otp-info" style="color: var(--sec); font-size: 0.8rem; margin-bottom: 25px;"></p>
+                <input type="number" id="otp-input" class="input-box" placeholder="• • • •" style="text-align: center; letter-spacing: 12px; font-size: 1.5rem; font-weight: 800;">
+                <button class="btn-auth" onclick="verifyOTP()">Verifikasi & Masuk</button>
+                <p onclick="location.reload()" style="margin-top: 20px; font-size: 0.75rem; color: var(--p); font-weight: 700; cursor: pointer;">Ganti Nomor HP</p>
+            </div>
         </div>
     </div>
 
-    <div class="header">
-        <h1>SENN STORE</h1>
-        <div id="status"></div>
+    <header>
+        <h1 onclick="toggleAdmin()">SENN STORE.</h1>
+        <div class="flex items-center gap-3">
+            <span id="u-display" style="font-size: 0.65rem; font-weight: 800; color: var(--sec); margin-right: 10px;">USER</span>
+            <div class="logout-btn" onclick="logout()">LOGOUT</div>
+        </div>
+    </header>
+
+    <div class="banner">
+        <h2>SENN PREMIUM.</h2>
+        <p>Jajan estetik, perut pun asik! Pilih menu favoritmu di bawah ini.</p>
     </div>
 
-    <div class="grid" id="products"></div>
+    <div class="grid" id="menu-grid"></div>
 
     <div id="overlay">
-        <div class="modal">
-            <h2 id="m-name"></h2>
-            <div class="qty-ctrl">
-                <button class="q-btn" onclick="setQty(-1)">-</button>
-                <span id="m-qty" style="font-size: 1.5rem; font-weight: 800;">1</span>
-                <button class="q-btn" onclick="setQty(1)">+</button>
+        <div class="modal text-center">
+            <div id="m-img" style="font-size: 4rem; margin-bottom: 10px;"></div>
+            <h2 id="m-name" style="font-weight: 800; font-size: 1.5rem;"></h2>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin: 30px 0;">
+                <button onclick="setQty(-1)" style="width: 55px; height: 55px; border-radius: 20px; border: 1.5px solid #eee; background: white; font-size: 1.5rem;">-</button>
+                <span id="m-qty" style="font-size: 1.8rem; font-weight: 800;">1</span>
+                <button onclick="setQty(1)" style="width: 55px; height: 55px; border-radius: 20px; background: var(--p); color: white; border: none; font-size: 1.5rem;">+</button>
             </div>
-            <input type="text" id="m-note" class="note" placeholder="Contoh: Sausnya dipisah ya...">
-            <button class="checkout-btn" onclick="add()">Konfirmasi & Tambah</button>
+            <input type="text" id="m-note" class="input-box" placeholder="Catatan (Contoh: Tanpa kuah...)">
+            <button class="btn-auth" onclick="addToCart()">Tambahkan ke Keranjang</button>
+            <button style="width:100%; border:none; background:none; color: var(--sec); font-weight: 700; margin-top: 20px; font-size: 0.8rem;" onclick="closeModal()">BATALKAN</button>
         </div>
     </div>
 
-    <div class="footer" id="cart-ui">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div id="t-price" style="font-weight:800; font-size:1.2rem;">Rp 0</div>
-            <div id="t-count" style="font-size:0.7rem; font-weight:700; color:var(--text-muted);">0 Item</div>
+    <div class="footer" id="cart-bar">
+        <div>
+            <p id="total-price" style="font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px;">Rp 0</p>
+            <p id="total-count" style="font-size: 0.6rem; font-weight: 700; opacity: 0.6; text-transform: uppercase;">0 Items</p>
         </div>
-        <button class="checkout-btn" id="send-wa" onclick="sendToWA()">Kirim Pesanan ke WhatsApp</button>
+        <button onclick="checkout()" style="background: var(--p); color: white; border: none; padding: 12px 25px; border-radius: 18px; font-weight: 800; font-size: 0.8rem;">PESAN WA</button>
     </div>
-</div>
 
 <script>
-    const WA_NUMBER = "6282325565971"; // <--- GANTI NOMOR WA LO DI SINI SENN!
-    const items = [{ id: 2, name: "Takoyaki Spesial", price: 2000, icon: "🐙", status: "habis" },
-        { id: 1, name: "Cireng Renyah", price: 1000, icon: "🍘" },
-        { id: 2, name: "Takoyaki Spesial", price: 2000, icon: "🐙" },
-        { id: 3, name: "Es Teh Manis", price: 3000, icon: "🍹" },
-        { id: 4, name: "Es Lumut Viral", price: 4000, icon: "🌿" },
-        { id: 5, name: "Es Kuwut Bali", price: 3000, icon: "🥥" }
+    const OWNER_PHONE = "6282325565971"; // Nomor lo Senn
+    let currentOTP = "";
+    
+    let products = [
+        { id: 1, name: "Cireng Renyah", price: 1000, img: "🍘" },
+        { id: 2, name: "Takoyaki Spesial", price: 2000, img: "🐙" },
+        { id: 3, name: "Es Teh Manis", price: 3000, img: "🍹" },
+        { id: 4, name: "Es Lumut Viral", price: 4000, img: "🌿" },
+        { id: 5, name: "Es Kuwut Bali", price: 3000, img: "🥥" }
     ];
 
     let cart = [];
-    let cur = null;
+    let curProd = null;
     let qty = 1;
 
-    // --- LOGIN LOGIC ---
-    function checkLogin() {
-        const user = localStorage.getItem('senn_user');
-        if (!user) {
-            document.getElementById('login-screen').style.display = 'flex';
-        } else {
-            document.getElementById('login-screen').style.display = 'none';
+    // --- SECURE AUTH LOGIC ---
+    function requestOTP() {
+        const name = document.getElementById('reg-name').value;
+        const phone = document.getElementById('reg-phone').value;
+        if(name.length < 3 || phone.length < 10) return alert("Isi data yang lengkap ya!");
+
+        currentOTP = Math.floor(1000 + Math.random() * 9000).toString();
+        const waMsg = `Halo Admin Senn! Saya *${name}* mau belanja. Minta kode OTP nya dong.%0A%0A(Admin Only: Kode adalah *${currentOTP}*)`;
+        
+        alert("Senn akan kasih lo kode lewat WhatsApp. Klik OK buat lanjut.");
+        window.open(`https://wa.me/${OWNER_PHONE}?text=${waMsg}`, '_blank');
+
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('otp-section').style.display = 'block';
+        document.getElementById('otp-info').innerText = `Kode OTP sudah dikirim ke WhatsApp Admin. Silahkan tanya ke Senn.`;
+    }
+
+    function verifyOTP() {
+        if(document.getElementById('otp-input').value === currentOTP) {
+            const data = { n: document.getElementById('reg-name').value, p: document.getElementById('reg-phone').value };
+            localStorage.setItem('senn_session', JSON.stringify(data));
+            loadApp();
+        } else { alert("Kode OTP salah bro!"); }
+    }
+
+    function loadApp() {
+        const session = localStorage.getItem('senn_session');
+        if(session) {
+            document.getElementById('auth-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('auth-screen').style.display = 'none', 500);
+            const user = JSON.parse(session);
+            document.getElementById('u-display').innerText = user.n.toUpperCase();
+            renderGrid();
         }
     }
 
-    function saveLogin() {
-        const name = document.getElementById('cust-name').value;
-        const phone = document.getElementById('cust-phone').value;
-        if (name && phone) {
-            localStorage.setItem('senn_user', JSON.stringify({ name, phone }));
-            checkLogin();
-        } else {
-            alert("Isi nama & nomor WA dulu bro!");
-        }
+    function logout() { localStorage.removeItem('senn_session'); location.reload(); }
+
+    // --- STORE LOGIC ---
+    function renderGrid() {
+        document.getElementById('menu-grid').innerHTML = products.map(p => `
+            <div class="card" onclick="openModal(${p.id})">
+                <div class="img-box">${p.img}</div>
+                <h3>${p.name}</h3>
+                <p>Rp ${p.price.toLocaleString()}</p>
+            </div>
+        `).join('');
     }
 
-    function init() {
-        checkLogin();
-        const hours = new Date().getHours();
-        const isOpen = (hours >= 9 && hours < 21);
-        document.getElementById('status').innerHTML = isOpen ? 
-            `<span class="status-badge status-open">● Buka</span>` : 
-            `<span class="status-badge status-closed">● Tutup</span>`;
-        document.getElementById('send-wa').disabled = !isOpen;
-
-        document.getElementById('products').innerHTML = items.map(p => `
-            <div class="card">
-                <div class="img-box">${p.icon}</div>
-                <div class="info">
-                    <div class="name">${p.name}</div>
-                    <div class="price">Rp ${p.price.toLocaleString()}</div>
-                </div>
-                <button class="add-btn" onclick="show(${p.id})">+</button>
-            </div>`).join('');
-    }
-
-    // --- MODAL & CART LOGIC ---
-    function show(id) {
-        cur = items.find(i => i.id === id);
+    function openModal(id) {
+        curProd = products.find(p => p.id === id);
         qty = 1;
-        document.getElementById('m-name').innerText = cur.name;
+        document.getElementById('m-name').innerText = curProd.name;
+        document.getElementById('m-img').innerText = curProd.img;
         document.getElementById('m-qty').innerText = "1";
         document.getElementById('m-note').value = "";
         document.getElementById('overlay').style.display = 'flex';
     }
 
-    function setQty(v) {
-        qty = Math.max(1, qty + v);
-        document.getElementById('m-qty').innerText = qty;
+    function closeModal() { document.getElementById('overlay').style.display = 'none'; }
+    function setQty(v) { qty = Math.max(1, qty + v); document.getElementById('m-qty').innerText = qty; }
+
+    function addToCart() {
+        cart.push({...curProd, q: qty, note: document.getElementById('m-note').value});
+        closeModal();
+        const bar = document.getElementById('cart-bar');
+        bar.style.transform = "translateY(0)";
+        const total = cart.reduce((s, i) => s + (i.price * i.q), 0);
+        document.getElementById('total-price').innerText = `Rp ${total.toLocaleString()}`;
+        document.getElementById('total-count').innerText = `${cart.length} ITEMS SELECTED`;
     }
 
-    function add() {
-        cart.push({ ...cur, qty, note: document.getElementById('m-note').value });
-        document.getElementById('overlay').style.display = 'none';
-        renderCart();
+    function checkout() {
+        const user = JSON.parse(localStorage.getItem('senn_session'));
+        let list = cart.map(i => `• *${i.name}* (${i.q}x) ${i.note ? '[_'+i.note+'_]' : ''}`).join('%0A');
+        let total = cart.reduce((s, i) => s + (i.price * i.q), 0);
+        let msg = `*ORDER SENN PREMIUM*%0A%0A*User:* ${user.n}%0A*WA:* ${user.p}%0A%0A*Pesanan:*%0A${list}%0A%0A*Total: Rp ${total.toLocaleString()}*`;
+        window.open(`https://wa.me/${OWNER_PHONE}?text=${msg}`, '_blank');
     }
 
-    function renderCart() {
-        if(cart.length === 0) return;
-        document.getElementById('cart-ui').style.display = 'block';
-        const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-        document.getElementById('t-price').innerText = `Rp ${total.toLocaleString()}`;
-        document.getElementById('t-count').innerText = `${cart.length} Jenis Barang`;
-    }
-
-    function sendToWA() {
-        if(cart.length === 0) return;
-        const user = JSON.parse(localStorage.getItem('senn_user'));
-        
-        let list = cart.map(i => `• *${i.name}* (${i.qty}x)${i.note ? '%0A  _Ket: ' + i.note + '_' : ''}`).join('%0A%0A');
-        let total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-        
-        let text = `*ORDER SENN STORE*%0A%0A` +
-                   `*Pesenan Atas Nama:*%0A${user.name} (${user.phone})%0A%0A` +
-                   `*Item:*%0A${list}%0A%0A` +
-                   `*Total: Rp ${total.toLocaleString()}*`;
-
-        window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, '_blank');
-    }
-
-    init();
-    setInterval(init, 5000); 
+    window.onload = loadApp;
 </script>
-
 </body>
 </html>
