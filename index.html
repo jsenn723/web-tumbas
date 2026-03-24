@@ -3,98 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SENN STORE V13.0</title>
+    <title>SENN STORE V14.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #007aff; --bg: #f2f2f7; --card: rgba(255, 255, 255, 0.9); --text: #1c1c1e; }
+        :root { --p: #007aff; --bg: #0a0a0c; --glass: rgba(255, 255, 255, 0.08); --border: rgba(255, 255, 255, 0.1); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: var(--text); padding-bottom: 100px; }
-        .glass { background: var(--card); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3); }
-        #auth-screen { position: fixed; inset: 0; z-index: 9999; background: #fff; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .input-ui { width: 100%; padding: 16px; margin-top: 12px; border-radius: 14px; border: 1px solid #ddd; outline: none; font-size: 1rem; }
-        .btn-p { width: 100%; padding: 16px; background: var(--p); color: white; border: none; border-radius: 14px; margin-top: 20px; font-weight: 700; }
-        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .banner { margin: 0 20px 20px; padding: 25px; border-radius: 24px; background: linear-gradient(135deg, #007aff, #5856d6); color: white; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; }
-        .card { border-radius: 20px; padding: 15px; text-align: center; transition: 0.2s; position: relative; }
-        #admin-panel { position: fixed; inset: 0; background: white; z-index: 10000; display: none; padding: 20px; overflow-y: auto; }
-        .cart-bar { position: fixed; bottom: 20px; left: 20px; right: 20px; padding: 15px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; background: #1c1c1e; color: white; transform: translateY(150px); transition: 0.5s; }
-        #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); display: none; align-items: flex-end; z-index: 500; }
-        .modal { width: 100%; background: white; border-radius: 30px 30px 0 0; padding: 30px; text-align: center; }
+        
+        body { 
+            background: radial-gradient(circle at top right, #1e1e26, #0a0a0c); 
+            color: #fff; 
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        .liquid-glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+        }
+
+        /* Auth Screen */
+        #auth-screen { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; align-items: center; justify-content: center; padding: 25px; }
+        .auth-card { width: 100%; max-width: 360px; padding: 40px 30px; text-align: center; }
+        .input-ui { width: 100%; padding: 18px; margin-top: 15px; border-radius: 18px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 1rem; }
+        .btn-p { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 18px; margin-top: 25px; font-weight: 800; box-shadow: 0 10px 20px rgba(0,122,255,0.3); }
+
+        /* App UI */
+        header { padding: 25px; position: sticky; top: 0; z-index: 100; text-align: center; }
+        header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .banner { margin: 0 20px 25px; padding: 30px; border-radius: 30px; background: linear-gradient(135deg, rgba(0,122,255,0.2), rgba(88,86,214,0.2)); border: 1px solid var(--border); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .card { padding: 20px; text-align: center; transition: 0.3s; }
+        .card:active { transform: scale(0.92); }
+        .price { color: var(--p); font-weight: 800; margin-top: 5px; }
+
+        /* Secret Panel */
+        #admin-panel { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; padding: 30px; }
+
+        .cart-bar { position: fixed; bottom: 25px; left: 20px; right: 20px; padding: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 500; }
+
+        #modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
-        <div style="width:100%; max-width:350px; text-align:center;">
-            <h1 style="font-size: 2.5rem; font-weight: 800;">SENN<span style="color:var(--p)">.</span></h1>
+        <div class="auth-card liquid-glass">
+            <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px;">SENN<span style="color:var(--p)">.</span></h1>
+            <p style="opacity: 0.6; font-size: 0.9rem;">Liquid Glass Edition</p>
             <div id="login-form">
-                <input type="text" id="u-name" class="input-ui" placeholder="Nama Kamu">
+                <input type="text" id="u-name" class="input-ui" placeholder="Nama Lengkap">
                 <input type="number" id="u-wa" class="input-ui" placeholder="WhatsApp (08...)">
-                <button class="btn-p" onclick="reqOTP()">Masuk & Minta OTP</button>
+                <button class="btn-p" onclick="reqOTP()">GAS LOGIN</button>
             </div>
             <div id="otp-form" style="display:none;">
-                <input type="number" id="otp-val" class="input-ui" placeholder="Kode OTP">
-                <button class="btn-p" onclick="verifOTP()">Konfirmasi</button>
+                <p style="margin-bottom:15px; font-size:0.8rem;">Cek WA Senn buat kodenya</p>
+                <input type="number" id="otp-val" class="input-ui" placeholder="Ketik OTP Di Sini" style="text-align:center; letter-spacing:5px;">
+                <button class="btn-p" onclick="verifOTP()">KONFIRMASI</button>
             </div>
         </div>
     </div>
 
     <div id="admin-panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Admin Panel</h2>
-            <button onclick="closeAdmin()">Tutup</button>
-        </div>
-        <hr style="margin:20px 0;">
-        <label>Jam Buka (0-23):</label>
-        <input type="number" id="set-buka" class="input-ui">
-        <label>Jam Tutup (0-23):</label>
-        <input type="number" id="set-tutup" class="input-ui">
-        <button class="btn-p" onclick="saveAdmin()">Simpan</button>
+        <h2 style="margin-bottom:20px;">Setting Toko</h2>
+        <label>Jam Buka:</label><input type="number" id="set-buka" class="input-ui">
+        <label style="margin-top:20px; display:block;">Jam Tutup:</label><input type="number" id="set-tutup" class="input-ui">
+        <button class="btn-p" onclick="saveAdmin()">SIMPAN</button>
+        <button onclick="closeAdmin()" style="margin-top:20px; background:none; border:none; color:#ff3b30; width:100%; font-weight:700;">BATAL</button>
     </div>
 
-    <header class="glass">
+    <header class="liquid-glass" style="margin: 10px 20px; border-radius: 20px;">
         <h1 onclick="adminTrigger()">SENN STORE.</h1>
-        <div id="status-dot" style="width:12px; height:12px; border-radius:50%;"></div>
     </header>
 
-    <div class="banner">
-        <h2 id="greet">Halo!</h2>
-        <p id="info-toko">Memuat status...</p>
+    <div class="banner liquid-glass">
+        <h2 id="greet" style="font-weight: 800;">Halo!</h2>
+        <p id="info-toko" style="font-size: 0.8rem; opacity: 0.6; margin-top: 8px;">Memuat status toko...</p>
     </div>
 
     <div class="grid" id="menu-grid"></div>
 
     <div id="modal-overlay">
-        <div class="modal">
-            <div id="m-img" style="font-size:4rem;"></div>
+        <div class="auth-card liquid-glass">
+            <div id="m-img" style="font-size:4rem; margin-bottom:10px;"></div>
             <h2 id="m-name"></h2>
-            <button class="btn-p" onclick="tambah()">Tambah ke Keranjang</button>
+            <button class="btn-p" onclick="tambah()">TAMBAH KE KERANJANG</button>
+            <button onclick="closeM()" style="margin-top:20px; background:none; border:none; color:#888; width:100%;">BATAL</button>
         </div>
     </div>
 
-    <div class="cart-bar glass" id="cart-ui">
-        <p id="c-total" style="font-weight:800;">Rp 0</p>
-        <button onclick="gasOrder()" style="background:var(--p); color:white; border:none; padding:10px 20px; border-radius:12px;">ORDER WA</button>
+    <div class="cart-bar liquid-glass" id="cart-ui" style="transform: translateY(150px);">
+        <div>
+            <p id="c-total" style="font-weight:800; font-size:1.1rem;">Rp 0</p>
+            <p style="font-size:0.6rem; opacity:0.5;">TOTAL PESANAN</p>
+        </div>
+        <button onclick="gasOrder()" style="background:var(--p); color:white; border:none; padding:12px 20px; border-radius:14px; font-weight:800;">ORDER (WA)</button>
     </div>
 
 <script>
-    let ADMINS = [
-        { nama: "Senn (Owner)", wa: "6282325565971" },
-        { nama: "Admin 2 (Standby)", wa: "621892158880" }
-    ];
-
-    let MENU = [
+    // --- SETTING ADMIN (SENN ONLY) ---
+    const MY_WA = "6282325565971"; // Nomor lo Senn
+    
+    const MENU = [
         { id: 1, n: "Cireng Ayam", p: 1000, e: "🍘", s: true },
         { id: 2, n: "Takoyaki Spec", p: 5000, e: "🐙", s: true },
         { id: 3, n: "Es Teh Manis", p: 3000, e: "🍹", s: true },
-        { id: 4, n: "Es Lumut", p: 4000, e: "🌿", s: true }
+        { id: 4, n: "Es Lumut", p: 4000, e: "🌿", s: true },
+        { id: 5, n: "Es Kuwut", p: 3000, e: "🥥", s: true }
     ];
 
-    let config = JSON.parse(localStorage.getItem('senn_config')) || { buka: 0, tutup: 24 }; // Default 24 jam biar bisa tes
-    let clickCount = 0, otpSkrg = "", cart = [], pSkrg = null;
+    let config = JSON.parse(localStorage.getItem('senn_config')) || { buka: 0, tutup: 24 };
+    let otpSkrg = "", cart = [], pSkrg = null, clickCount = 0;
 
-    function adminTrigger() { clickCount++; if(clickCount >= 5) { document.getElementById('admin-panel').style.display='block'; clickCount=0; } }
+    function adminTrigger() {
+        clickCount++;
+        if(clickCount >= 5) { document.getElementById('admin-panel').style.display='block'; clickCount=0; }
+        setTimeout(() => clickCount=0, 3000);
+    }
     function saveAdmin() {
         config.buka = parseInt(document.getElementById('set-buka').value);
         config.tutup = parseInt(document.getElementById('set-tutup').value);
@@ -105,11 +133,15 @@
 
     function reqOTP() {
         const n = document.getElementById('u-name').value;
-        if(n.length < 2) return alert("Nama kosong!");
-        let t = prompt("Pilih Admin:\n1. Senn\n2. Admin 2");
-        let wa = (t == "2") ? ADMINS[1].wa : ADMINS[0].wa;
+        const w = document.getElementById('u-wa').value;
+        if(n.length < 2 || w.length < 10) return alert("Isi data dulu!");
+
         otpSkrg = Math.floor(1000 + Math.random()*9000).toString();
-        window.open(`https://wa.me/${wa}?text=Halo! Saya *${n}* minta OTP: ${otpSkrg}`);
+        const msg = `Halo Senn! Saya *${n}* (${w}) mau masuk toko. Minta OTP-nya dong. (Admin: Kodenya adalah *${otpSkrg}*)`;
+        
+        // LANGSUNG KIRIM KE WA SENN
+        window.open(`https://wa.me/${MY_WA}?text=${encodeURIComponent(msg)}`, '_blank');
+        
         document.getElementById('login-form').style.display='none';
         document.getElementById('otp-form').style.display='block';
     }
@@ -118,19 +150,20 @@
         if(document.getElementById('otp-val').value == otpSkrg) {
             localStorage.setItem('session_senn', document.getElementById('u-name').value);
             location.reload();
-        } else { alert("Salah!"); }
+        } else { alert("OTP Salah!"); }
     }
 
     function render() {
         const j = new Date().getHours();
         const isOpen = j >= config.buka && j < config.tutup;
-        document.getElementById('status-dot').style.background = isOpen ? "#34c759" : "#ff3b30";
-        document.getElementById('info-toko').innerText = isOpen ? "Toko Buka" : "Toko Tutup";
+        document.getElementById('info-toko').innerText = isOpen ? `Buka sampai jam ${config.tutup}:00` : `Toko lagi Tutup (Buka jam ${config.buka}:00)`;
+        
         document.getElementById('menu-grid').innerHTML = MENU.map(i => `
-            <div class="card glass" onclick="${isOpen ? `openM(${i.id})` : ''}">
-                <div style="font-size:3rem;">${i.e}</div>
-                <h3>${i.n}</h3>
-                <p>Rp ${i.p}</p>
+            <div class="card liquid-glass" onclick="${isOpen && i.s ? `openM(${i.id})` : ''}" style="opacity: ${isOpen && i.s ? '1' : '0.4'}">
+                <div style="font-size:3.5rem; margin-bottom:10px;">${i.e}</div>
+                <h3 style="font-size:0.9rem;">${i.n}</h3>
+                <p class="price">Rp ${i.p.toLocaleString()}</p>
+                ${!i.s ? '<p style="font-size:0.6rem; color:#ff3b30; font-weight:800;">HABIS</p>' : ''}
             </div>
         `).join('');
     }
@@ -141,27 +174,30 @@
         document.getElementById('m-img').innerText = pSkrg.e;
         document.getElementById('modal-overlay').style.display='flex';
     }
+    function closeM() { document.getElementById('modal-overlay').style.display='none'; }
 
     function tambah() {
         cart.push({...pSkrg, q: 1});
-        document.getElementById('modal-overlay').style.display='none';
+        closeM();
         document.getElementById('cart-ui').style.transform='translateY(0)';
         let tot = cart.reduce((a, b) => a + b.p, 0);
-        document.getElementById('c-total').innerText = `Rp ${tot}`;
+        document.getElementById('c-total').innerText = `Rp ${tot.toLocaleString()}`;
     }
 
     function gasOrder() {
         let n = localStorage.getItem('session_senn');
-        let t = prompt("Pilih Admin:\n1. Senn\n2. Admin 2");
-        let wa = (t == "2") ? ADMINS[1].wa : ADMINS[0].wa;
         let list = cart.map(x => `• ${x.n}`).join('%0A');
-        window.open(`https://wa.me/${wa}?text=*ORDER SENN*%0ANama: ${n}%0A${list}`);
+        let tot = cart.reduce((a, b) => a + b.p, 0);
+        const msg = `*ORDER SENN STORE*%0A%0ANama: ${n}%0A%0A*Pesanan:*%0A${list}%0A%0A*Total: Rp ${tot.toLocaleString()}*`;
+        window.open(`https://wa.me/${MY_WA}?text=${msg}`, '_blank');
     }
 
     window.onload = () => {
         if(localStorage.getItem('session_senn')) {
             document.getElementById('auth-screen').style.display='none';
-            document.getElementById('greet').innerText = "Halo, " + localStorage.getItem('session_senn');
+            document.getElementById('greet').innerText = "Halo, " + localStorage.getItem('session_senn').toUpperCase() + "!";
+            document.getElementById('set-buka').value = config.buka;
+            document.getElementById('set-tutup').value = config.tutup;
             render();
         }
     };
